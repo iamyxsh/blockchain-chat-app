@@ -1,6 +1,12 @@
 #[cfg(test)]
 mod tests {
-    use crate::wallets::{signable::Signable, Wallet};
+    use std::time::{SystemTime, UNIX_EPOCH};
+
+    use crate::{
+        blockchain::Blockchain,
+        blocks::Block,
+        wallets::{accountable::Accountable, signable::Signable, Wallet},
+    };
 
     #[test]
     fn it_should_create_wallet() {
@@ -16,5 +22,22 @@ mod tests {
         let signature = wallet.sign_message("Signature".to_string());
 
         assert!(wallet.verify_message("Signature".to_string(), &signature));
+    }
+
+    #[test]
+    fn it_should_fetch_balance() {
+        let wallet = Wallet::new();
+
+        let genesis_block = Block::genesis_block(
+            SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .unwrap()
+                .as_secs(),
+        );
+        let blockchain = Blockchain::start(genesis_block.clone());
+
+        let balance = wallet.get_balance(&blockchain);
+
+        assert_eq!(balance, 0);
     }
 }

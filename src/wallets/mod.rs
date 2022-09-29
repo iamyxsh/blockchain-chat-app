@@ -1,4 +1,5 @@
 mod __tests__;
+mod accountable;
 mod signable;
 
 use ed25519_dalek::Keypair;

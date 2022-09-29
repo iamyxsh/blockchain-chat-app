@@ -1,9 +1,14 @@
 #[cfg(test)]
 mod tests {
+
     use serde::{Deserialize, Serialize};
     use sha256::digest;
 
-    use crate::utils::{hashing::hash_string, json::ser_json};
+    use crate::utils::{
+        db::{CRUD, KVDB},
+        hashing::hash_string,
+        json::ser_json,
+    };
 
     #[derive(Serialize, Deserialize, Debug)]
     struct SampleStruct {
@@ -30,5 +35,26 @@ mod tests {
             stringified_struct,
             serde_json::to_string(&sample_struct).unwrap_or_default()
         );
+    }
+
+    #[test]
+    fn it_can_load_db_from_disk() {
+        let db = KVDB::init();
+
+        db.save("sample", &"sample".to_string());
+        let find = db.find("sample".as_ref()).unwrap();
+
+        let _ = db.db.flush();
+
+        assert_eq!(find, "sample");
+    }
+
+    #[test]
+    fn it_can_load_saved_data() {
+        let db = KVDB::init();
+
+        // db.save("sample", &"sample".to_string());
+
+        assert_eq!(db.find("sample".as_ref()).unwrap(), "sample");
     }
 }

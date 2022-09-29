@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use serde::{Deserialize, Serialize};
 
 use crate::blocks::Block;
@@ -9,11 +11,15 @@ pub mod verifyable;
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Blockchain {
     pub blocks: Vec<Block>,
+    pub balances: HashMap<String, u64>,
 }
 
 impl Blockchain {
     pub fn start(genesis_block: Block) -> Self {
-        let mut blockchain = Blockchain { blocks: Vec::new() };
+        let mut blockchain = Blockchain {
+            blocks: Vec::new(),
+            balances: HashMap::new(),
+        };
 
         blockchain.blocks.push(genesis_block);
 
