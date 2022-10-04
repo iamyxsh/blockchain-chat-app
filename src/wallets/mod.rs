@@ -1,6 +1,6 @@
 mod __tests__;
-mod accountable;
-mod signable;
+pub(crate) mod accountable;
+pub mod signable;
 
 use ed25519_dalek::Keypair;
 use rand::rngs::OsRng;

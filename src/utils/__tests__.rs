@@ -1,6 +1,8 @@
 #[cfg(test)]
 mod tests {
 
+    use std::mem;
+
     use serde::{Deserialize, Serialize};
     use sha256::digest;
 
@@ -44,17 +46,10 @@ mod tests {
         db.save("sample", &"sample".to_string());
         let find = db.find("sample".as_ref()).unwrap();
 
-        let _ = db.db.flush();
+        let _ = db.db.flush().unwrap();
+
+        mem::drop(db);
 
         assert_eq!(find, "sample");
-    }
-
-    #[test]
-    fn it_can_load_saved_data() {
-        let db = KVDB::init();
-
-        // db.save("sample", &"sample".to_string());
-
-        assert_eq!(db.find("sample".as_ref()).unwrap(), "sample");
     }
 }

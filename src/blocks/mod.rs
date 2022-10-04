@@ -2,7 +2,8 @@ use self::hashable::Hashable;
 use serde::{Deserialize, Serialize};
 
 mod __tests__;
-mod hashable;
+pub mod hashable;
+pub mod verifyable;
 
 #[derive(Serialize, Deserialize, PartialEq, Clone, Debug)]
 pub struct Block {
@@ -24,7 +25,7 @@ impl Block {
             timestamp: now,
             nonce: 100,
             payload: vec![0; 32],
-            difficulty: None,
+            difficulty: Some(1),
             hash: None,
             previous_hash: None,
         };
@@ -48,7 +49,7 @@ impl Block {
             timestamp,
             nonce,
             payload,
-            difficulty: None,
+            difficulty: Some(1),
             hash: None,
             previous_hash: Some(previous_hash),
         };

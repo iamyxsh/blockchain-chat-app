@@ -12,7 +12,7 @@ serde = { version = "1.0.126", features = ["derive"] }
 serde_json = "1.0.64"
 ed25519-dalek = "1.0.1"
 rand = "0.7.0"
-rocksdb = "0.19.0"
+sled = "0.34.7"
 
 [lib]
 name = "lib"
