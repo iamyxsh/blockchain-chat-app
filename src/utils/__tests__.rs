@@ -1,9 +1,8 @@
 #[cfg(test)]
 mod tests {
 
-    use std::mem;
-
     use serde::{Deserialize, Serialize};
+    use serial_test::serial;
     use sha256::digest;
 
     use crate::utils::{
@@ -18,6 +17,7 @@ mod tests {
     }
 
     #[test]
+    #[serial]
     fn it_should_hash_string() {
         let sample_string = "Sample String".to_string();
         let hashed_string = hash_string(sample_string.clone());
@@ -26,6 +26,7 @@ mod tests {
     }
 
     #[test]
+    #[serial]
     fn it_stringingify_struct() {
         let sample_struct = SampleStruct {
             name: "Yash".to_string(),
@@ -40,15 +41,14 @@ mod tests {
     }
 
     #[test]
+    #[serial]
     fn it_can_load_db_from_disk() {
-        let db = KVDB::init();
+        let db = KVDB::init("tmp");
 
         db.save("sample", &"sample".to_string());
         let find = db.find("sample".as_ref()).unwrap();
 
         let _ = db.db.flush().unwrap();
-
-        mem::drop(db);
 
         assert_eq!(find, "sample");
     }

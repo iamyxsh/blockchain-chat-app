@@ -1,27 +1,36 @@
-use sled::{open, Db, IVec};
-
+use rocksdb::DB;
+use std::sync::Arc;
 pub trait CRUD {
-    fn init() -> Self;
-    fn save(&self, k: &str, v: &str);
-    fn find(&self, k: &str) -> Option<IVec>;
+    fn init(file_path: &str) -> Self;
+    fn save(&self, k: &str, v: &str) -> bool;
+    fn find(&self, k: &str) -> Option<String>;
+    fn delete(&self, k: &str) -> bool;
 }
-
 #[derive(Clone)]
 pub struct KVDB {
-    pub db: sled::Db,
+    pub db: Arc<DB>,
 }
-
 impl CRUD for KVDB {
-    fn init() -> Self {
-        let db: Db = open("tmp").unwrap();
-        KVDB { db }
+    fn init(file_path: &str) -> Self {
+        KVDB {
+            db: Arc::new(DB::open_default(file_path).unwrap()),
+        }
     }
-
-    fn save(&self, k: &str, v: &str) {
-        let _ = self.db.insert(k.as_bytes(), v.as_bytes());
+    fn save(&self, k: &str, v: &str) -> bool {
+        self.db.put(k.as_bytes(), v.as_bytes()).is_ok()
     }
+    fn find(&self, k: &str) -> Option<String> {
+        match self.db.get(k.as_bytes()) {
+            Ok(Some(v)) => {
+                let result = String::from_utf8(v).unwrap();
 
-    fn find(&self, k: &str) -> Option<IVec> {
-        self.db.get(k.as_bytes()).unwrap()
+                Some(result)
+            }
+            Ok(None) => None,
+            Err(_) => None,
+        }
+    }
+    fn delete(&self, k: &str) -> bool {
+        self.db.delete(k.as_bytes()).is_ok()
     }
 }

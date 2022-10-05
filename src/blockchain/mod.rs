@@ -7,6 +7,7 @@ use crate::blocks::Block;
 mod __tests__;
 pub mod appendable;
 pub mod mintable;
+pub mod savable;
 pub mod verifyable;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]

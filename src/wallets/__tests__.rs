@@ -2,6 +2,8 @@
 mod tests {
     use std::time::{SystemTime, UNIX_EPOCH};
 
+    use serial_test::serial;
+
     use crate::{
         blockchain::Blockchain,
         blocks::Block,
@@ -9,6 +11,7 @@ mod tests {
     };
 
     #[test]
+    #[serial]
     fn it_should_create_wallet() {
         let wallet = Wallet::new();
 
@@ -17,6 +20,7 @@ mod tests {
     }
 
     #[test]
+    #[serial]
     fn it_should_sign_and_verify() {
         let wallet = Wallet::new();
         let signature = wallet.sign_message("Signature".to_string());
@@ -25,6 +29,7 @@ mod tests {
     }
 
     #[test]
+    #[serial]
     fn it_should_fetch_balance() {
         let wallet = Wallet::new();
 

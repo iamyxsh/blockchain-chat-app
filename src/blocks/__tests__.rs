@@ -1,5 +1,7 @@
 #[cfg(test)]
 mod tests {
+    use serial_test::serial;
+
     use crate::{
         blockchain::{appendable::Appendable, Blockchain},
         blocks::{verifyable::Verifyable, Block},
@@ -11,6 +13,7 @@ mod tests {
     };
 
     #[test]
+    #[serial]
     fn it_should_init_genesis_block() {
         let now = SystemTime::now()
             .duration_since(UNIX_EPOCH)
@@ -66,8 +69,6 @@ mod tests {
                 vec![0; 32],
                 genesis_block.clone().hash.unwrap(),
             );
-
-            println!("nonce: {}, hash: {}", x, block.clone().hash.unwrap());
 
             if block.verify_block() {
                 block1 = block;
